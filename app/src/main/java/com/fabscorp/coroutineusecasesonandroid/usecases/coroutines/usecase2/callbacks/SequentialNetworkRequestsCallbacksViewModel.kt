@@ -11,21 +11,24 @@ class SequentialNetworkRequestsCallbacksViewModel(
     private val mockApi: CallbackMockApi = mockApi()
 ) : BaseViewModel<UiState>() {
 
+    private var getAndroidVersion: Call <List<AndroidVersion>>? = null
+    private var getAndroidFeatures: Call <VersionFeatures>? = null
+
     fun perform2SequentialNetworkRequest() {
         uiState.value = UiState.Loading
 
-        val getAndroidVersion = mockApi.getRecentAndroidVersions()
+        getAndroidVersion = mockApi.getRecentAndroidVersions()
 
-        getAndroidVersion.enqueue(object: Callback<List<AndroidVersion>> {
+        getAndroidVersion!!.enqueue(object: Callback<List<AndroidVersion>> {
             override fun onResponse(
                 call: Call<List<AndroidVersion>>,
                 response: Response<List<AndroidVersion>>
             ) {
                 if (response.isSuccessful) {
                     val mostRecentVersion = response.body()!!.last()
-                    val getAndroidFeatures = mockApi.getAndroidVersionFeatures(mostRecentVersion.apiLevel)
+                    getAndroidFeatures = mockApi.getAndroidVersionFeatures(mostRecentVersion.apiLevel)
 
-                    getAndroidFeatures.enqueue(object: Callback<VersionFeatures>{
+                    getAndroidFeatures!!.enqueue(object: Callback<VersionFeatures>{
                         override fun onResponse(
                             call: Call<VersionFeatures>,
                             response: Response<VersionFeatures>
@@ -53,5 +56,12 @@ class SequentialNetworkRequestsCallbacksViewModel(
                 uiState.value = UiState.Error ("Something unexpected happening!")
             }
         })
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        getAndroidVersion?.cancel()
+        getAndroidFeatures?.cancel()
     }
 }
