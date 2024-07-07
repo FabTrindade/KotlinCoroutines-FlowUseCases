@@ -4,4 +4,4 @@
 #####  (It is based on the initial project template from a Udemy course (Kotlin Coroutines and Flow for Android Development [2024]))
 
 ### Highlight features used:  
-_
+_ viewModelScope.launch  
