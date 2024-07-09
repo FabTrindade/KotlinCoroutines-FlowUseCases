@@ -5,3 +5,4 @@
 
 ### Highlight features used:  
 _ viewModelScope.launch  
+_ viewModelScope.async
