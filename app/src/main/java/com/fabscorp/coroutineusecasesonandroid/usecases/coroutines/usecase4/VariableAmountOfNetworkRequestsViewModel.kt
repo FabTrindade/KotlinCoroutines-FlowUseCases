@@ -34,12 +34,12 @@ class VariableAmountOfNetworkRequestsViewModel(
             try {
                 val androidVersions = mockApi.getRecentAndroidVersions()
 
-                val androidFeaturesDeferred = androidVersions.map { androidVersion ->
-                    viewModelScope.async {
+                val androidFeatures = androidVersions.map { androidVersion ->
+                    async {// viewModelScope isn't needed because launch scope already invoked
                         mockApi.getAndroidVersionFeatures(androidVersion.apiLevel)
                     }
-                }
-                val androidFeatures = awaitAll(*androidFeaturesDeferred.toTypedArray())
+                }.awaitAll()
+
                 uiState.value = UiState.Success(androidFeatures)
             } catch (e: Exception) {
                 uiState.value = UiState.Error("Network request failed!")
