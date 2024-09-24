@@ -10,23 +10,17 @@ fun main() {
     val scopeJob = Job()
     val scope = CoroutineScope(Dispatchers.Default + scopeJob)
 
-    var childCoroutineJob: Job? = null
-    val coroutineJob= scope.launch {
+    val passedJob = Job()
 
-        childCoroutineJob = launch {
-            println("Starting child coroutine...")
-            delay(1000)
-        }
-
+    val coroutineJob= scope.launch (passedJob) {
         println("Starting coroutine...")
         delay(1000)
     }
 
-    Thread.sleep(1000)
-
-    println("Is childCoroutineJob a child of coroutineJob? => ${coroutineJob.children.contains(childCoroutineJob)}")
-    //OUTPUT: Is childCoroutineJob a child of coroutineJob? => true
+    println("passedJob and coroutineJob are referenced to the same job object? => ${passedJob === coroutineJob}")
+    //OUTPUT: passedJob and coroutineJob are referenced to the same job object? => false
 
     println("Is coroutineJob a child of scopeJob? => ${scopeJob.children.contains(coroutineJob)}")
-    //OUTPUT: Is coroutineJob a child of scopeJob? => true
+    //OUTPUT: Is coroutineJob a child of scopeJob? => false
+    //Notice this big change!!!!
 }
