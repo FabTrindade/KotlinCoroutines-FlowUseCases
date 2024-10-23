@@ -13,10 +13,12 @@ import kotlinx.coroutines.runBlocking
 fun main() = runBlocking<Unit>{
     val scope = CoroutineScope(Dispatchers.Default)
 
-    scope.launch {
+    val childCoroutine1Job = scope.launch {
         delay(1000)
         println("Coroutine 1 completed!")
-    }.invokeOnCompletion { throwable ->
+    }
+
+    childCoroutine1Job.invokeOnCompletion { throwable ->
         if (throwable is CancellationException){
             println("Coroutine 1 was cancelled!")
         }
@@ -30,10 +32,13 @@ fun main() = runBlocking<Unit>{
         }
     }
 
-   scope.coroutineContext[Job]!!.cancelAndJoin()
+    delay(200)
+    childCoroutine1Job.cancelAndJoin()
+    delay(2000)
+    // Cancelling a child coroutine doesn't cancel its sibling
     //OUTPUT:
-    //Coroutine 2 was cancelled!
     //Coroutine 1 was cancelled!
+    //Coroutine 2 completed!
     //Process finished with exit code 0
 
 }
