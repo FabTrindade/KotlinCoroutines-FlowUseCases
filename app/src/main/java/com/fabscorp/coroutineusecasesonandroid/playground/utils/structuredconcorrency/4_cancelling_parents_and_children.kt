@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -29,8 +30,7 @@ fun main() = runBlocking<Unit>{
         }
     }
 
-    scope.cancel();
-    scope.coroutineContext[Job]!!.join()
+   scope.coroutineContext[Job]!!.cancelAndJoin()
     //OUTPUT:
     //Coroutine 2 was cancelled!
     //Coroutine 1 was cancelled!
