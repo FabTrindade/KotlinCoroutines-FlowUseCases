@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 fun main () {
@@ -34,13 +35,15 @@ fun main () {
     }
 
     Thread.sleep(1000)
+    println("Scope got cancelled: ${!scope.isActive}")
     //OUTPUT:
     //Coroutine 2 started!!!
     //Coroutine 1 started!!!
     //Coroutine 1 fails!!!
-    //Coroutine 2 got cancelled!!
     //Caught exception java.lang.RuntimeException
+    //Coroutine 2 got cancelled!!
+    //Scope got cancelled: true
     //
-    //  NOTE: whit Job() (regular Job) as CoroutineScope parameter, all de scope is cancelled with
+    //  NOTE: with Job() (regular Job) as CoroutineScope parameter, all de scope is cancelled with
     //throw RuntimeException() called in coroutine 1.
 }
