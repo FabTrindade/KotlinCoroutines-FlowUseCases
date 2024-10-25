@@ -5,9 +5,11 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 
 fun main () {
 
@@ -15,7 +17,7 @@ fun main () {
         CoroutineExceptionHandler {coroutineContext, throwable ->
         println("Caught exception $throwable")
     }
-    val scope = CoroutineScope(Job() + exceptionHandler)
+    val scope = CoroutineScope(SupervisorJob() + exceptionHandler)
 
     scope.launch {
         println("Coroutine 1 started!!!")
@@ -37,12 +39,12 @@ fun main () {
     Thread.sleep(1000)
     println("Scope got cancelled: ${!scope.isActive}")
     //OUTPUT:
-    //Coroutine 2 started!!!
     //Coroutine 1 started!!!
+    //Coroutine 2 started!!!
     //Coroutine 1 fails!!!
     //Caught exception java.lang.RuntimeException
-    //Coroutine 2 got cancelled!!
-    //Scope got cancelled: true
+    //Coroutine 2 completed!!!
+    //Scope got cancelled: false
     //
     //  NOTE: with Job() (regular Job) as CoroutineScope parameter, all de scope is cancelled with
     //throw RuntimeException() called in coroutine 1.
