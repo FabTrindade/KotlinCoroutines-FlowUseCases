@@ -10,19 +10,8 @@ fun main() {
     val scope = CoroutineScope(Job())
 
     scope.launch {
-        coroutineScope {
-            launch {
-                println("Starting Task 1!")
-                delay(100)
-                println("Task 1 completed!")
-            }
-            launch {
-                println("Starting Task 2!")
-                delay(200)
-                println("Task 2 completed!")
-            }
-        }
 
+        doSomeTasks()
 
         launch {
             println("Starting Task 3!")
@@ -35,10 +24,23 @@ fun main() {
     //OUTPUT:
     //Starting Task 1!
     //Starting Task 2!
+    //Starting Task 3!
     //Task 1 completed!
     //Task 2 completed!
-    //Starting Task 3!
     //Task 3 completed!
     //
-    //OBS: Task 3 after 1 and 2!
+    //OBS: All tasks run in parallel!
+}
+
+fun CoroutineScope.doSomeTasks(){
+    launch {
+        println("Starting Task 1!")
+        delay(100)
+        println("Task 1 completed!")
+    }
+    launch {
+        println("Starting Task 2!")
+        delay(200)
+        println("Task 2 completed!")
+    }
 }
