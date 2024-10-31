@@ -2,6 +2,7 @@ package com.fabscorp.coroutineusecasesonandroid.playground.utils.structuredconco
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -9,7 +10,7 @@ fun main() {
     val scope = CoroutineScope(Job())
 
     scope.launch {
-        launch {
+        coroutineScope {
             launch {
                 println("Starting Task 1!")
                 delay(100)
@@ -20,7 +21,7 @@ fun main() {
                 delay(200)
                 println("Task 2 completed!")
             }
-        }.join()
+        }
 
 
         launch {
