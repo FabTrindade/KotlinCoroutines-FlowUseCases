@@ -9,19 +9,19 @@ fun main() {
     val scope = CoroutineScope(Job())
 
     scope.launch {
-        val job1 = launch {
-            println("Starting Task 1!")
-            delay(100)
-            println("Task 1 completed!")
-        }
-        val job2 = launch {
-            println("Starting Task 2!")
-            delay(200)
-            println("Task 2 completed!")
-        }
+        launch {
+            launch {
+                println("Starting Task 1!")
+                delay(100)
+                println("Task 1 completed!")
+            }
+            launch {
+                println("Starting Task 2!")
+                delay(200)
+                println("Task 2 completed!")
+            }
+        }.join()
 
-        job1.join()
-        job2.join()
 
         launch {
             println("Starting Task 3!")
