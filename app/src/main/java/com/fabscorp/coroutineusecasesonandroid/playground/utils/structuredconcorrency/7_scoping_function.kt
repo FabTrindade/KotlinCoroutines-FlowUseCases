@@ -24,15 +24,15 @@ fun main() {
     //OUTPUT:
     //Starting Task 1!
     //Starting Task 2!
-    //Starting Task 3!
     //Task 1 completed!
     //Task 2 completed!
+    //Starting Task 3!
     //Task 3 completed!
     //
-    //OBS: All tasks run in parallel!
+    //OBS: Task 3 runs after 1 and 2.
 }
 
-fun CoroutineScope.doSomeTasks(){
+suspend fun doSomeTasks() = coroutineScope{
     launch {
         println("Starting Task 1!")
         delay(100)
